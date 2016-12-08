@@ -49,17 +49,23 @@ BOOST_AUTO_TEST_CASE(test_json_single_point)
     auto geom = engine::api::json::makeGeoJSONGeometry(begin(locations), end(locations));
 
     const auto type = geom.values["type"].get<util::json::String>().value;
-    BOOST_CHECK_EQUAL(type, "Point");
+    BOOST_CHECK_EQUAL(type, "LineString");
 
     const auto coords = geom.values["coordinates"].get<util::json::Array>().values;
-    BOOST_CHECK_EQUAL(coords.size(), 2); // array of two numbers
+    BOOST_CHECK_EQUAL(coords.size(), 2); // array of two location arrays
 
-    const auto lon = coords[0].get<util::json::Number>().value;
-    const auto lat = coords[1].get<util::json::Number>().value;
+    for (const auto each : coords)
+    {
+        const auto loc = each.get<util::json::Array>().values;
+        BOOST_CHECK_EQUAL(loc.size(), 2);
 
-    (void)lon;
-    (void)lat;
-    // cast fails if type do not match
+        const auto lon = loc[0].get<util::json::Number>().value;
+        const auto lat = loc[1].get<util::json::Number>().value;
+
+        (void)lon;
+        (void)lat;
+        // cast fails if type do not match
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
