@@ -66,9 +66,7 @@ util::json::Object makeGeoJSONGeometry(ForwardIter begin, ForwardIter end)
     else if (num_coordinates > 0)
     {
         geojson.values["type"] = "Point";
-        util::json::Array coordinates;
-        coordinates.values.push_back(detail::coordinateToLonLat(*begin));
-        geojson.values["coordinates"] = std::move(coordinates);
+        geojson.values["coordinates"] = detail::coordinateToLonLat(*begin);
     }
     return geojson;
 }
